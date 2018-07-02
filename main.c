@@ -39,6 +39,7 @@ void bank()
     int i=0,j,p;
     int l=0;
     char flag='Y';
+    int ch;
     while(flag=='Y'||flag=='y'||flag==1)
     {
         printf("请输入需申请资源的进程号（从P0到P3,否则重新输入！）：P");
@@ -52,33 +53,54 @@ void bank()
         i=0;
 
         //输入的数量大过available的,或者大过need。
-            for(j=0;j<N;j++)
-            {
-                if(available[j]<request[j] || request[j]>need[p][j] )
-                {
-                    printf("The number you enter was not satisfied\n");
-                    flag='N';
-                    break;
-                }
-            }
-        //start checking for safety.
-
-        if(flag=='Y'||flag=='y')
+        for(j=0; j<N; j++)
         {
-            changedata(p);
-            if(chkerr(p))
+            if(available[j]<request[j] || request[j]>need[p][j] )
             {
-                rstordata(p);
-                showdata();
+                printf("The number you enter was not satisfied\n");
+                flag='N';
+                break;
+            }
+        }
+        //start checking for safety.
+        printf("please enter the number ：1 for banker, 2 for Random\n");
+        scanf("%d",&ch);
+        if(ch==1)
+        {
+            if(flag=='Y'||flag=='y')
+            {
+                changedata(p);
+                if(chkerr(p))
+                {
+                    rstordata(p);
+                    showdata();
+                }
+                else
+                    showdata();
             }
             else
                 showdata();
         }
         else
-            showdata();
+        {
+            if(flag=='Y'||flag=='y')
+            {
+                changedata(p);
+                if(random(p))
+                {
+                    rstordata(p);
+                    showdata();
+                }
+                else
+                    showdata();
+            }
+            else
+                showdata();
+        }
+
 
         printf("\n\n");
-        printf("是否继续银行家算法演示,按1键继续,按0键退出演示: ");
+        printf("是否继续演示,按1键继续,按0键退出演示: ");
         scanf("%d",&l);
         if(l==1)
             flag='Y';
@@ -109,6 +131,33 @@ void rstordata(int k)
     }
 }
 
+int random(int k)
+{
+    int i,j;
+    int x[3];
+    int n=0;
+    int work,finish[10];
+    for(i=0;i<N;i++)
+    {
+        work=available[i];
+        for(j=0;j<M;j++)
+        {
+            x[n++]=j;
+            if(need[j][i]<=work)
+            work=work+allocation[j][i];
+            else
+            {
+                printf("Random filed,Because the need[%d][%d] is too big\n",j,i);
+                return 1;
+            }
+        }
+    }
+    printf("random successful!\n");
+    for(n=0;n<4;n++)
+        printf("%d",x[n]);
+
+    return 0;
+}
 int chkerr(int k)
 {
     int i,j;
@@ -145,7 +194,7 @@ int chkerr(int k)
     }
     printf("系统安全，申请成功\n");
     printf("安全序列为：");
-    for(n=0;n<4;n++)
+    for(n=0; n<4; n++)
     {
         printf("%d ",a[n]);
     }

@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1530519633 source:e:\github\bank\bank\main.c
+	<stdio.h>
+	<stdlib.h>
+	"bank.h"
+
+1530499718 e:\github\bank\bank\bank.h
+	<string.h>
+	<stdio.h>
+
